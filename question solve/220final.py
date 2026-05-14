@@ -58,3 +58,73 @@ def getEncoding(root, st):
         char_path = findPath(root, chr, "")
         result += char_path    
     return result
+
+def mergeLL(h1,h2):
+    def getLength(head):
+        length = 0
+        while head:
+            length +=1
+            head = head.next 
+        return length
+    
+    len1 = getLength(h1)
+    len2 = getLength(h2)
+    ptr1 = h1 
+    ptr2 = h2 
+     
+    if len1> len2: 
+        for _ in range(len1-len2):
+            ptr1 = ptr1.next 
+
+    elif len2> len1:
+        for _ in range(len2-len1):
+            ptr2 = ptr2.next 
+    intersecNode = None 
+    while ptr1 and ptr2:
+        if ptr1 == ptr2:
+            intersecNode = ptr1
+            break
+        ptr1 = ptr1.next 
+        ptr2 = ptr2.next
+    
+    if intersecNode is None:
+        return None 
+    if h1 == intersecNode:
+        return h2
+    curr = h1 
+    while curr.next != intersecNode:
+        curr = curr.next 
+    curr.next = h2 
+
+    return h1
+
+
+def second_max(root):
+    # arr[0] stores the maximum, arr[1] stores the second maximum
+    # Initialize with negative infinity
+    arr = [float('-inf'), float('-inf')]
+    
+    # Helper function to traverse the tree
+    def traverse(node, arr):
+        if node is None:
+            return
+            
+        val = node.elem
+        
+        # If current value is greater than the max
+        if val > arr[0]:
+            arr[1] = arr[0] # Demote old max to second max
+            arr[0] = val    # Set new max
+        # If current value is greater than second max (and strictly less than max)
+        elif val > arr[1] and val < arr[0]:
+            arr[1] = val
+            
+        # Traverse left and right children
+        traverse(node.left, arr)
+        traverse(node.right, arr)
+        
+    # Start traversal
+    traverse(root, arr)
+    
+    # Return the second highest value
+    return arr[1]
